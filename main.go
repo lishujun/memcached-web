@@ -6,7 +6,9 @@ import (
 
 func main() {
     m := martini.Classic()
-    m.Get("/acton/Add/:key", Add)
-    m.Get("/action/Get/:key", Get)
+    m.Post("/action/add/:key/:flag/:expire", Add)
+    m.Post("/action/get/:key", Get)
+    m.Post("/action/delete/:key", Delete)
+    m.Post("/action/flushall", FlushAll)
     m.Run()
 }
