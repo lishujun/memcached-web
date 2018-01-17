@@ -3,7 +3,6 @@ package main
 import (
     "net"
     "fmt"
-    //"strconv"
 )
 
 type MemcachedClient struct {
@@ -11,58 +10,74 @@ type MemcachedClient struct {
 }
 
 func MakeClient(connString string) *MemcachedClient{
+
+    conn, err := net.Dial("tcp", connString)
+    if err != nil{
+        return nil
+    }
+
     var client *MemcachedClient
     client = &MemcachedClient{}
-    client.init(connString)
+    client.conn = conn
     return client
 }
 
-func (this *MemcachedClient) init (connString string){
-    conn, err := net.Dial("tcp", connString)
+func (this *MemcachedClient) callApi(command string) string {
+
+    _ , err := this.conn.Write([]byte(command))
     if err != nil{
-        fmt.Print(err)
-        panic(err)
+        return ""
     }
 
-    this.conn = conn
-}
-
-func (this *MemcachedClient) callApi(command string) string {
-    this.conn.Write([]byte(command))
-
-    var response []byte = make([]byte, 1024)
-    n, _ := this.conn.Read(response)
+    var response []byte = make([]byte, 1024 * 1024)
+    n, err := this.conn.Read(response)
+    if err != nil{
+        return ""
+    }
     return string(response[:n])
 }
 
 func (this *MemcachedClient) callSaveApi(command string, data string) string {
 
-    this.conn.Write([]byte(command))
+    _ , err := this.conn.Write([]byte(command))
+    if err != nil{
+        return ""
+    }
 
-    this.conn.Write([]byte(data + "\r\n"))
+    _, err = this.conn.Write([]byte(data + "\r\n"))
+    if err != nil{
+        return ""
+    }
 
     var response []byte = make([]byte, 1024)
-    n, _ := this.conn.Read(response)
+    n, err := this.conn.Read(response)
+    if err != nil{
+        return ""
+    }
     return string(response[:n])
 }
 
-func (this *MemcachedClient) Add(key string, flag int, expire int, data string) string {
+func (this *MemcachedClient) Add(key string, flag int, expire int, data string) bool {
     command := fmt.Sprintf("add %s %d %d %d \r\n", key, flag, expire, len(data))
-    return this.callSaveApi(command, data)
+    response  := this.callSaveApi(command, data)
+    return response == "STORED"
 }
 
-func (this *MemcachedClient) Get(key string) string{
+func (this *MemcachedClient) Get(key string) (string, bool){
     command := fmt.Sprintf("get %s \r\n", key)
-    return this.callApi(command)
+    response  :=  this.callApi(command)
+    return response, true
 }
 
-func (this *MemcachedClient) Delete(key string) string{
+func (this *MemcachedClient) Delete(key string) bool{
     command := fmt.Sprintf("delete %s \r\n", key)
-    return this.callApi(command)
+    response := this.callApi(command)
+    return response == "DELETED"
 }
 
-func (this *MemcachedClient) FlushAll() string{
+func (this *MemcachedClient) FlushAll() bool {
     command := fmt.Sprintf("flush_all \r\n")
-    return this.callApi(command)
+    response := this.callApi(command)
+    return response == "OK"
 }
 
