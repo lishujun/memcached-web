@@ -3,6 +3,7 @@ package main
 import (
     "net"
     "fmt"
+    "strconv"
 
     l4g "github.com/alecthomas/log4go"
 )
@@ -71,6 +72,18 @@ func (this *MemcachedClient) Add(key string, flag int, expire int, data string) 
     return response == "STORED"
 }
 
+func (this *MemcachedClient) Replace(key string, flag int, expire int, data string) bool {
+    command := fmt.Sprintf("replace %s %d %d %d \r\n", key, flag, expire, len(data))
+    response  := this.callSaveApi(command, data)
+    return response == "STORED"
+}
+
+func (this *MemcachedClient) Set(key string, flag int, expire int, data string) bool {
+    command := fmt.Sprintf("replace %s %d %d %d \r\n", key, flag, expire, len(data))
+    response  := this.callSaveApi(command, data)
+    return response == "STORED"
+}
+
 func (this *MemcachedClient) Get(key string) (string, bool){
     command := fmt.Sprintf("get %s \r\n", key)
     response  :=  this.callApi(command)
@@ -87,5 +100,25 @@ func (this *MemcachedClient) FlushAll() bool {
     command := fmt.Sprintf("flush_all \r\n")
     response := this.callApi(command)
     return response == "OK"
+}
+
+func (this *MemcachedClient) Incr(key string, num int) (int, bool){
+    command := fmt.Sprintf("incr %s %d", key, num)
+    response := this.callApi(command)
+    n, err := strconv.Atoi(response)
+    if err != nil{
+        return -1, false
+    }
+    return n, true
+}
+
+func (this *MemcachedClient)Decr(key string, num int) (int,bool) {
+    command := fmt.Sprintf("decr %s %d", key, num)
+    response := this.callApi(command)
+    n, err := strconv.Atoi(response)
+    if err != nil{
+        return -1, false
+    }
+    return n, true
 }
 
