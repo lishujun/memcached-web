@@ -109,7 +109,7 @@ func (this *MemcachedClient) FlushAll() bool {
 }
 
 func (this *MemcachedClient) Incr(key string, num int) (int, bool){
-    command := fmt.Sprintf("incr %s %d", key, num)
+    command := fmt.Sprintf("incr %s %d\r\n", key, num)
     response := this.callApi(command)
     n, err := strconv.Atoi(response)
     if err != nil{
@@ -119,7 +119,7 @@ func (this *MemcachedClient) Incr(key string, num int) (int, bool){
 }
 
 func (this *MemcachedClient)Decr(key string, num int) (int,bool) {
-    command := fmt.Sprintf("decr %s %d", key, num)
+    command := fmt.Sprintf("decr %s %d\r\n", key, num)
     response := this.callApi(command)
     n, err := strconv.Atoi(response)
     if err != nil{
