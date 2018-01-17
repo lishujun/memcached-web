@@ -7,7 +7,6 @@ import (
     "fmt"
 
     "github.com/go-martini/martini"
-     //l4g "github.com/alecthomas/log4go"
 )
 
 const SERVER_ADDR = "192.168.216.201:11211"

@@ -7,7 +7,7 @@ import (
 
 func main() {
 
-    l4g.LoadConfiguration("configuration.xml")
+    l4g.LoadConfiguration("log4go.xml")
     l4g.Info("Application Start")
     defer l4g.Close()
 
