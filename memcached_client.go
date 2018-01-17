@@ -28,6 +28,8 @@ func MakeClient(connString string) *MemcachedClient{
 
 func (this *MemcachedClient) callApi(command string) string {
 
+    l4g.Info("send command '%s'", command)
+
     _ , err := this.conn.Write([]byte(command))
     if err != nil{
         l4g.Error("send command '%s' failed, reason:[%v]", command, err)
@@ -40,11 +42,14 @@ func (this *MemcachedClient) callApi(command string) string {
         l4g.Error("recv response failed, reason:[%v]", err)
         return ""
     }
+    l4g.Info("recv response '%s'", response[:n])
     return string(response[:n])
 }
 
 func (this *MemcachedClient) callSaveApi(command string, data string) string {
 
+    l4g.Info("send command '%s'", command)
+    l4g.Debug("save data '%s'", data)
     _ , err := this.conn.Write([]byte(command))
     if err != nil{
         l4g.Error("send command '%s' failed, reason: [%v]", command, err)
@@ -63,25 +68,26 @@ func (this *MemcachedClient) callSaveApi(command string, data string) string {
         l4g.Error("recv response failed, reason: [%v]", err)
         return ""
     }
+    l4g.Info("recv response '%s'", response[:n])
     return string(response[:n])
 }
 
 func (this *MemcachedClient) Add(key string, flag int, expire int, data string) bool {
     command := fmt.Sprintf("add %s %d %d %d \r\n", key, flag, expire, len(data))
     response  := this.callSaveApi(command, data)
-    return response == "STORED"
+    return response == "STORED\r\n"
 }
 
 func (this *MemcachedClient) Replace(key string, flag int, expire int, data string) bool {
     command := fmt.Sprintf("replace %s %d %d %d \r\n", key, flag, expire, len(data))
     response  := this.callSaveApi(command, data)
-    return response == "STORED"
+    return response == "STORED\r\n"
 }
 
 func (this *MemcachedClient) Set(key string, flag int, expire int, data string) bool {
-    command := fmt.Sprintf("replace %s %d %d %d \r\n", key, flag, expire, len(data))
+    command := fmt.Sprintf("set %s %d %d %d \r\n", key, flag, expire, len(data))
     response  := this.callSaveApi(command, data)
-    return response == "STORED"
+    return response == "STORED\r\n"
 }
 
 func (this *MemcachedClient) Get(key string) (string, bool){
@@ -93,13 +99,13 @@ func (this *MemcachedClient) Get(key string) (string, bool){
 func (this *MemcachedClient) Delete(key string) bool{
     command := fmt.Sprintf("delete %s \r\n", key)
     response := this.callApi(command)
-    return response == "DELETED"
+    return response == "DELETED\r\n"
 }
 
 func (this *MemcachedClient) FlushAll() bool {
     command := fmt.Sprintf("flush_all \r\n")
     response := this.callApi(command)
-    return response == "OK"
+    return response == "OK\r\n"
 }
 
 func (this *MemcachedClient) Incr(key string, num int) (int, bool){
