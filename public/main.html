@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Memcached管理界面</title>
+    <link rel="stylesheet" type="text/css" href="jquery-easyui-1.5.4/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="jquery-easyui-1.5.4/themes/icon.css">
+    <script type="text/javascript" src="jquery-easyui-1.5.4/jquery.min.js"></script>
+    <script type="text/javascript" src="jquery-easyui-1.5.4/jquery.easyui.min.js"></script>
+
+
+</head>
+<body>
+
+    <!--添加缓存界面-->
+    <div id="w" class="easyui-window"
+         title="添加Key" data-options="iconCls:'icon-save'"
+         style="width:500px;height:200px;padding:10px;">
+
+        <table>
+            <tr>
+                <td>键名</td>
+                <td><input type="text" id="key_name"/></td>
+            </tr>
+            <tr>
+                <td>类型</td>
+                <td><input type="text" id="key_type"/></td>
+            </tr>
+            <tr>
+                <td>缓存时间</td>
+                <td><input type="text" id="key_expire"/></td>
+            </tr>
+            <tr>
+                <td>值</td>
+                <td><textarea id="key_value"></textarea></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="button" value="添加" onclick="AddKey();">
+                    <input type="button" value="取消" onclick="closeAddUI()">
+                    <label id="add_message"></label>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!--功能-->
+    <div>
+        搜索:
+        <input type="text" id="search-box" />
+        <input type="button" value="搜索" id ="btn-search"/>
+        <input type="button" value="添加" id ="btn-add" onclick="showAddUI()"/>
+    </div>
+
+    <!--表格-->
+    <div>
+        <table class="easyui-datagrid" title="Memcached缓存查询与管理" style="width:80%;height:250px"
+               data-options="singleSelect:true,collapsible:true" id="dg">
+            <thead>
+            <tr>
+                <th data-options="field:'key',width:'20%'">key</th>
+                <th data-options="field:'type',width:'20%'">类型</th>
+                <th data-options="field:'expire',width:'20%'">存储时间</th>
+                <th data-options="field:'value',width:'20%'">值</th>
+                <th data-options="field:'_operate',width:'20%',align:'center',formatter:formatOper">操作</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+
+    <!--脚本-->
+    <script language="JavaScript">
+
+        // ------------------------------------
+        $(document).ready(function(){
+            closeAddUI();
+        });
+
+        function showAddUI() {
+            $('#w').window('open')
+        }
+
+        function closeAddUI() {
+            $('#w').window('close')
+        }
+
+        // ------------------------------------
+
+        function formatOper(val, row,index){
+            return '<a href="#" onclick="RemoveKey(\'' + row.key + '\')">删除</a>';
+        }
+
+        function AddKey() {
+            //var row = {key:"user:1000", type:"string", expire:0, value:"lishujun"}
+            var row ={
+                key : $("#key_name").val(),
+                type : $("#key_type").val(),
+                expire : $("#key_expire").val(),
+                value : $("#key_value").val(),
+            }
+            $('#dg').datagrid('insertRow', {index : 0, row: row});
+        }
+        
+        function RemoveKey(key) {
+            var rows = $('#dg').datagrid('getRows');
+            for(i=0; i<rows.length; i++){
+                if (rows[i].key == key){
+                    $('#dg').datagrid("deleteRow", i)
+                    return;
+                }
+            }
+        }
+
+        function showJson() {
+            //var myData = $('#dg').datagrid('getRows');
+            //alert('myData : ' + JSON.stringify(myData));
+        }
+
+
+    </script>
+</body>
+</html>
