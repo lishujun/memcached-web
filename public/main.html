@@ -110,12 +110,16 @@
                 type: 'POST',
                 url: url,
                 //data: data,
-                dataType: 'text',
-                success: function (data) {
-                    alert(data);
-                },
+                dataType: 'json',
                 error: function (msg) {
-                    alert('msg : ' + JSON.stringify(msg));
+                    $("#lbl_search_msg").text("发生一个错误!");
+                    console.log("error: " + JSON.stringify(msg))
+                },
+                success: function (data) {
+                    if(! data.result){
+                        $("#lbl_search_msg").text(data.message);
+                        return;
+                    }
                 }
             });
         }

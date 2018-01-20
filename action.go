@@ -4,15 +4,31 @@ import (
     "net/http"
     "io/ioutil"
     "strconv"
-    "fmt"
+    "encoding/json"
 
     "github.com/go-martini/martini"
+    l4g "github.com/alecthomas/log4go"
 )
 
 const SERVER_ADDR = "192.168.216.201:11211"
 
 func responseJSON(result bool, message interface{}) string {
-    return fmt.Sprintf("{'result':%t, 'message':'%v'}", result, message)
+
+    response := map [string]interface{}{
+        "result" : result,
+        "message" : message,
+    }
+    bytes , err := json.Marshal(response)
+    if err == nil{
+        msg := string(bytes)
+        l4g.Info("output : %s ", msg)
+        return msg
+    }
+
+    l4g.Error("convert to json error , reason [%v]" , err)
+    return "{\"result\": false, \"message\":\"object to json error\"}"
+
+
 }
 
 func Add(params martini.Params, req *http.Request) string {
