@@ -55,6 +55,7 @@
         <input type="text" id="search-box" />
         <input type="button" value="搜索" id ="btn-search" onclick="SearchKey()"/>
         <input type="button" value="添加" id ="btn-add" onclick="showAddUI()"/>
+        <label id="lbl_search_msg" style="color: red"></label>
     </div>
 
     <!--表格-->
@@ -77,6 +78,8 @@
     <!--脚本-->
     <script language="JavaScript">
 
+        var baseUrl = "http://127.0.0.1:3000";
+
         // ------------------------------------
         $(document).ready(function(){
             closeAddUI();
@@ -93,7 +96,28 @@
         // ------------------------------------
 
         function SearchKey(){
-            
+
+            $("#lbl_search_msg").val("");
+
+            var keyword = $("#search-box").val()
+            if (keyword == ""){
+                $("#lbl_search_msg").text("必须输入关键词");
+                return;
+            }
+
+            url = baseUrl + "/action/get/"+keyword;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                //data: data,
+                dataType: 'text',
+                success: function (data) {
+                    alert(data);
+                },
+                error: function (msg) {
+                    alert('msg : ' + JSON.stringify(msg));
+                }
+            });
         }
 
         // ------------------------------------
