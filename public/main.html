@@ -8,7 +8,11 @@
     <script type="text/javascript" src="jquery-easyui-1.5.4/jquery.min.js"></script>
     <script type="text/javascript" src="jquery-easyui-1.5.4/jquery.easyui.min.js"></script>
 
-
+    <style>
+        body{
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
 
@@ -24,11 +28,11 @@
             </tr>
             <tr>
                 <td>类型</td>
-                <td><input type="text" id="key_type"/></td>
+                <td><input type="text" id="key_type" value="1"/></td>
             </tr>
             <tr>
                 <td>缓存时间</td>
-                <td><input type="text" id="key_expire"/></td>
+                <td><input type="text" id="key_expire" value="0"/></td>
             </tr>
             <tr>
                 <td>值</td>
@@ -39,7 +43,7 @@
                 <td>
                     <input type="button" value="添加" onclick="AddKey();">
                     <input type="button" value="取消" onclick="closeAddUI()">
-                    <label id="add_message"></label>
+                    <label id="lbl_add_msg" style="color: red"></label>
                 </td>
             </tr>
         </table>
@@ -54,8 +58,9 @@
     </div>
 
     <!--表格-->
-    <div>
-        <table class="easyui-datagrid" title="Memcached缓存查询与管理" style="width:80%;height:250px"
+    <div style="margin-top: 10px; width: 100%">
+        <table class="easyui-datagrid" title="Memcached缓存查询与管理"
+               style="width:99%;height:250px;"
                data-options="singleSelect:true,collapsible:true" id="dg">
             <thead>
             <tr>
@@ -93,13 +98,27 @@
 
         function AddKey() {
             //var row = {key:"user:1000", type:"string", expire:0, value:"lishujun"}
+
             var row ={
                 key : $("#key_name").val(),
                 type : $("#key_type").val(),
                 expire : $("#key_expire").val(),
                 value : $("#key_value").val(),
             }
+
+            if(row.key == ""){
+                $("#lbl_add_msg").text("键名不能为空");
+                return;
+            }
+
+            if(row.value == ""){
+                $("#lbl_add_msg").text("值不能为空");
+                return;
+            }
+
+            RemoveKey(row.key)
             $('#dg').datagrid('insertRow', {index : 0, row: row});
+            $("#lbl_add_msg").text("");
         }
         
         function RemoveKey(key) {
