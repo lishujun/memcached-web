@@ -23,19 +23,19 @@
 
         <table>
             <tr>
-                <td>键名</td>
+                <td align="right">键名:</td>
                 <td><input type="text" id="key_name"/></td>
             </tr>
             <tr>
-                <td>类型</td>
+                <td align="right">类型:</td>
                 <td><input type="text" id="key_type" value="1"/></td>
             </tr>
             <tr>
-                <td>缓存时间</td>
+                <td align="right">缓存时间:</td>
                 <td><input type="text" id="key_expire" value="0"/></td>
             </tr>
             <tr>
-                <td>值</td>
+                <td align="right" valign="top">值:</td>
                 <td><textarea id="key_value"></textarea></td>
             </tr>
             <tr>
@@ -53,7 +53,7 @@
     <div>
         搜索:
         <input type="text" id="search-box" />
-        <input type="button" value="搜索" id ="btn-search"/>
+        <input type="button" value="搜索" id ="btn-search" onclick="SearchKey()"/>
         <input type="button" value="添加" id ="btn-add" onclick="showAddUI()"/>
     </div>
 
@@ -61,10 +61,10 @@
     <div style="margin-top: 10px; width: 100%">
         <table class="easyui-datagrid" title="Memcached缓存查询与管理"
                style="width:99%;height:250px;"
-               data-options="singleSelect:true,collapsible:true" id="dg">
+               data-options="singleSelect:true" id="dg">
             <thead>
             <tr>
-                <th data-options="field:'key',width:'20%'">key</th>
+                <th data-options="field:'key',width:'20%'">键名</th>
                 <th data-options="field:'type',width:'20%'">类型</th>
                 <th data-options="field:'expire',width:'20%'">存储时间</th>
                 <th data-options="field:'value',width:'20%'">值</th>
@@ -88,6 +88,12 @@
 
         function closeAddUI() {
             $('#w').window('close')
+        }
+
+        // ------------------------------------
+
+        function SearchKey(){
+            
         }
 
         // ------------------------------------
