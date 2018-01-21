@@ -125,7 +125,6 @@
 
                     for(i=0; i<data.message.length; i++){
                         var row = data.message[i]
-                        showJson(row)
                         RemoveKey(row.Key)
                         $('#dg').datagrid('insertRow', {index : 0, row: row});
                     }
