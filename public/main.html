@@ -136,7 +136,7 @@
         // ------------------------------------
 
         function formatOper(val, row,index){
-            return '<a href="#" onclick="RemoveKey(\'' + row.key + '\')">删除</a>';
+            return '<a href="#" onclick="RemoveKey(\'' + row.Key + '\')">删除</a>';
         }
 
         function AddKey() {
@@ -158,16 +158,48 @@
                 return;
             }
 
-            RemoveKey(row.Key)
-            $('#dg').datagrid('insertRow', {index : 0, row: row});
-            $("#lbl_add_msg").text("");
+            var url = baseUrl + "/action/add/"+row.Key+"/"+row.Type+"/"+row.Expire;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: row.Data,
+                dataType: 'json',
+                error: function (msg) {
+                    $("#lbl_search_msg").text("发生一个错误!");
+                    console.log("error: " + JSON.stringify(msg))
+                },
+                success: function (data) {
+                    if(! data.result){
+                        $("#lbl_add_msg").text("ERROR");
+                        return;
+                    }
+
+                    RemoveKey(row.Key)
+                    $('#dg').datagrid('insertRow', {index : 0, row: row});
+                }
+            });
         }
         
         function RemoveKey(key) {
             var rows = $('#dg').datagrid('getRows');
             for(i=0; i<rows.length; i++){
                 if (rows[i].Key == key){
-                    $('#dg').datagrid("deleteRow", i)
+
+                    $.ajax({
+                        type: 'POST',
+                        url: baseUrl + "/action/delete/"+key,
+                        dataType: 'json',
+                        error: function (msg) {
+                            alert("删除失败");
+                            console.log("error: " + JSON.stringify(msg))
+                        },
+                        success: function (data) {
+                            if(! data.result){
+                                return;
+                            }
+                            $('#dg').datagrid("deleteRow", i)
+                        }
+                    });
                     return;
                 }
             }
@@ -176,7 +208,6 @@
         function showJson(e) {
             alert(JSON.stringify(e));
         }
-
 
     </script>
 </body>
