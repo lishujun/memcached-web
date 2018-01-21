@@ -6,7 +6,16 @@ import (
     "strconv"
 
     l4g "github.com/alecthomas/log4go"
+    "strings"
 )
+
+type CachedResult struct {
+    Key string
+    Type int
+    Expire int
+    Length int
+    Data interface{}
+}
 
 type MemcachedClient struct {
     conn net.Conn
@@ -72,6 +81,33 @@ func (this *MemcachedClient) callSaveApi(command string, data string) string {
     return string(response[:n])
 }
 
+func (this *MemcachedClient)parse(response string) []CachedResult {
+
+    var resultList []CachedResult = []CachedResult{}
+    slice := response[:]
+    for{
+        i := strings.IndexAny(slice, "\r\n")
+        if i != -1{
+            if len(slice[:i]) > 5 && slice[:i][:5] == "VALUE"{
+                var result CachedResult
+                header := strings.Split(slice[:i], " ")
+                result.Key = header[1]
+                result.Type, _ = strconv.Atoi(header[2])
+                result.Length, _ = strconv.Atoi(header[3])
+                result.Expire = -1
+                result.Data = slice[i+2:][:result.Length]
+                resultList = append(resultList, result)
+
+                slice = slice[i + 2 + result.Length + 2:]
+                continue
+            }
+        }
+
+        break
+    }
+    return resultList
+}
+
 func (this *MemcachedClient) Add(key string, flag int, expire int, data string) bool {
     command := fmt.Sprintf("add %s %d %d %d \r\n", key, flag, expire, len(data))
     response  := this.callSaveApi(command, data)
@@ -90,10 +126,10 @@ func (this *MemcachedClient) Set(key string, flag int, expire int, data string) 
     return response == "STORED\r\n"
 }
 
-func (this *MemcachedClient) Get(key string) (string, bool){
+func (this *MemcachedClient) Get(key string) []CachedResult{
     command := fmt.Sprintf("get %s \r\n", key)
     response  :=  this.callApi(command)
-    return response, true
+    return this.parse(response)
 }
 
 func (this *MemcachedClient) Delete(key string) bool{

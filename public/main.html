@@ -65,10 +65,10 @@
                data-options="singleSelect:true" id="dg">
             <thead>
             <tr>
-                <th data-options="field:'key',width:'20%'">键名</th>
-                <th data-options="field:'type',width:'20%'">类型</th>
-                <th data-options="field:'expire',width:'20%'">存储时间</th>
-                <th data-options="field:'value',width:'20%'">值</th>
+                <th data-options="field:'Key',width:'20%'">键名</th>
+                <th data-options="field:'Type',width:'20%'">类型</th>
+                <th data-options="field:'Expire',width:'20%'">存储时间</th>
+                <th data-options="field:'Data',width:'20%'">值</th>
                 <th data-options="field:'_operate',width:'20%',align:'center',formatter:formatOper">操作</th>
             </tr>
             </thead>
@@ -120,6 +120,16 @@
                         $("#lbl_search_msg").text(data.message);
                         return;
                     }
+
+                    $("#lbl_search_msg").text("OK");
+
+                    for(i=0; i<data.message.length; i++){
+                        var row = data.message[i]
+                        showJson(row)
+                        RemoveKey(row.Key)
+                        $('#dg').datagrid('insertRow', {index : 0, row: row});
+                    }
+
                 }
             });
         }
@@ -131,26 +141,25 @@
         }
 
         function AddKey() {
-            //var row = {key:"user:1000", type:"string", expire:0, value:"lishujun"}
 
             var row ={
-                key : $("#key_name").val(),
-                type : $("#key_type").val(),
-                expire : $("#key_expire").val(),
-                value : $("#key_value").val(),
+                Key : $("#key_name").val(),
+                Type : $("#key_type").val(),
+                Expire : $("#key_expire").val(),
+                Data : $("#key_value").val(),
             }
 
-            if(row.key == ""){
+            if(row.Key == ""){
                 $("#lbl_add_msg").text("键名不能为空");
                 return;
             }
 
-            if(row.value == ""){
+            if(row.Data == ""){
                 $("#lbl_add_msg").text("值不能为空");
                 return;
             }
 
-            RemoveKey(row.key)
+            RemoveKey(row.Key)
             $('#dg').datagrid('insertRow', {index : 0, row: row});
             $("#lbl_add_msg").text("");
         }
@@ -158,16 +167,15 @@
         function RemoveKey(key) {
             var rows = $('#dg').datagrid('getRows');
             for(i=0; i<rows.length; i++){
-                if (rows[i].key == key){
+                if (rows[i].Key == key){
                     $('#dg').datagrid("deleteRow", i)
                     return;
                 }
             }
         }
 
-        function showJson() {
-            //var myData = $('#dg').datagrid('getRows');
-            //alert('myData : ' + JSON.stringify(myData));
+        function showJson(e) {
+            alert(JSON.stringify(e));
         }
 
 

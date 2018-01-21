@@ -131,11 +131,8 @@ func Get(params martini.Params, req *http.Request) string {
         return responseJSON(false, "make client error")
     }
 
-    response, result:= client.Get(key)
-    if !result {
-        return responseJSON(false, "get key error")
-    }
-    return responseJSON(true, response)
+    result := client.Get(key)
+    return responseJSON(true, result)
 }
 
 func Delete(params martini.Params, req *http.Request) string {
