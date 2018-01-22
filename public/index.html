@@ -29,6 +29,9 @@
     </div>
 
     <script language="JavaScript">
+
+        var baseUrl = "http://127.0.0.1:3000"
+
         function login() {
             var username = $("#username").val()
             var password = $("#password").val()
@@ -39,7 +42,26 @@
                 return
             }
 
-            location.href="main.html"
+            $.ajax({
+                type: 'POST',
+                url: baseUrl + "/user/login",
+                data: {"username":username, "password":password},
+                dataType: 'json',
+                error: function (msg) {
+                    $("#lbl_login_msg").text("发生一个错误!");
+                    console.log("error: " + JSON.stringify(msg))
+                },
+                success: function (data) {
+                    if(! data.result){
+                        $("#lbl_login_msg").text(data.message);
+                        return;
+                    }
+
+                    location.href="main.html"
+                }
+            });
+
+
         }
     </script>
 </body>

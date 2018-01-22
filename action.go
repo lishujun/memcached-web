@@ -7,6 +7,7 @@ import (
     "encoding/json"
 
     "github.com/go-martini/martini"
+    "github.com/martini-contrib/sessions"
     l4g "github.com/alecthomas/log4go"
 )
 
@@ -31,7 +32,12 @@ func responseJSON(result bool, message interface{}) string {
 
 }
 
-func Add(params martini.Params, req *http.Request) string {
+func Add(params martini.Params, req *http.Request, session sessions.Session) string {
+
+    if ! CheckAuth(session){
+        return responseJSON(false, "没有权限")
+    }
+
     key := params["key"]
 
     flag , err := strconv.Atoi(params["flag"])
@@ -62,7 +68,12 @@ func Add(params martini.Params, req *http.Request) string {
     return responseJSON(result, "")
 }
 
-func Replace(params martini.Params, req *http.Request) string {
+func Replace(params martini.Params, req *http.Request, session sessions.Session) string {
+
+    if ! CheckAuth(session){
+        return responseJSON(false, "没有权限")
+    }
+
     key := params["key"]
 
     flag , err := strconv.Atoi(params["flag"])
@@ -93,7 +104,12 @@ func Replace(params martini.Params, req *http.Request) string {
     return responseJSON(result, "")
 }
 
-func Set(params martini.Params, req *http.Request) string {
+func Set(params martini.Params, req *http.Request, session sessions.Session) string {
+
+    if ! CheckAuth(session){
+        return responseJSON(false, "没有权限")
+    }
+
     key := params["key"]
 
     flag , err := strconv.Atoi(params["flag"])
@@ -124,7 +140,12 @@ func Set(params martini.Params, req *http.Request) string {
     return responseJSON(result, "")
 }
 
-func Get(params martini.Params, req *http.Request) string {
+func Get(params martini.Params, req *http.Request, session sessions.Session) string {
+
+    if ! CheckAuth(session){
+        return responseJSON(false, "没有权限")
+    }
+
     key := params["key"]
     client := MakeClient(SERVER_ADDR)
     if client == nil{
@@ -135,7 +156,12 @@ func Get(params martini.Params, req *http.Request) string {
     return responseJSON(true, result)
 }
 
-func Delete(params martini.Params, req *http.Request) string {
+func Delete(params martini.Params, req *http.Request, session sessions.Session) string {
+
+    if ! CheckAuth(session){
+        return responseJSON(false, "没有权限")
+    }
+
     key := params["key"]
     //delay := params["delay"]
 
@@ -148,7 +174,12 @@ func Delete(params martini.Params, req *http.Request) string {
     return responseJSON(result, "")
 }
 
-func FlushAll(params martini.Params, req *http.Request) string {
+func FlushAll(params martini.Params, req *http.Request, session sessions.Session) string {
+
+    if ! CheckAuth(session){
+        return responseJSON(false, "没有权限")
+    }
+
     client  := MakeClient(SERVER_ADDR)
     if client == nil{
         return responseJSON(false, "make client error")
@@ -157,7 +188,12 @@ func FlushAll(params martini.Params, req *http.Request) string {
     return responseJSON(result, "")
 }
 
-func Incr(params martini.Params, req *http.Request) string {
+func Incr(params martini.Params, req *http.Request, session sessions.Session) string {
+
+    if ! CheckAuth(session){
+        return responseJSON(false, "没有权限")
+    }
+
     key := params["key"]
     num , err := strconv.Atoi(params["num"])
 
@@ -178,7 +214,12 @@ func Incr(params martini.Params, req *http.Request) string {
     return responseJSON(true, newNum)
 }
 
-func Decr(params martini.Params, req *http.Request) string {
+func Decr(params martini.Params, req *http.Request, session sessions.Session) string {
+
+    if ! CheckAuth(session){
+        return responseJSON(false, "没有权限")
+    }
+
     key := params["key"]
     num , err := strconv.Atoi(params["num"])
 
