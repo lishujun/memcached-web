@@ -2,9 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>memcached-web</title>
+    <title>Memcached管理界面</title>
+    <script type="text/javascript" src="jquery-easyui-1.5.4/jquery.min.js"></script>
 </head>
 <body>
-    <h1>Memcached Web</h1>
+    <div style="width: 280px;height: 150px; background-color: #0070a9 ;
+        border-radius:10px; position: absolute; margin-top: 15%; margin-left: 70%;
+        color:white;">
+        <table style="padding-top: 20px;padding-left:10px" cellpadding="2px">
+            <tr>
+                <td align="right">帐号</td>
+                <td><input type="text" id="username"></td>
+            </tr>
+            <tr align="right">
+                <td>密码</td>
+                <td><input type="password" id="password"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="button" id="btn_login" value="登录" onclick="login()">
+                    <label id="lbl_login_msg" style="font-size: 8px"></label>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script language="JavaScript">
+        function login() {
+            var username = $("#username").val()
+            var password = $("#password").val()
+
+            $("#lbl_login_msg").text()
+            if(username == "" || password == ""){
+                $("#lbl_login_msg").text("用户名密码不能为空")
+                return
+            }
+
+            location.href="main.html"
+        }
+    </script>
 </body>
 </html>
