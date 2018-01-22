@@ -12,6 +12,8 @@ func main() {
     l4g.Info("Application Start")
     defer l4g.Close()
 
+    InitConfigReader()
+
     m := martini.Classic()
     store := sessions.NewCookieStore([]byte("secret123"))
     m.Use(sessions.Sessions("my_session", store))

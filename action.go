@@ -11,7 +11,7 @@ import (
     l4g "github.com/alecthomas/log4go"
 )
 
-const SERVER_ADDR = "192.168.216.201:11211"
+//const SERVER_ADDR = "192.168.216.201:11211"
 
 func responseJSON(result bool, message interface{}) string {
 
@@ -60,7 +60,7 @@ func Add(params martini.Params, req *http.Request, session sessions.Session) str
     }
 
     contentString := string(content)
-    client := MakeClient(SERVER_ADDR)
+    client := MakeClient(ConfigReader.ConnString)
     if client == nil{
         return responseJSON(false, "make client error")
     }
@@ -96,7 +96,7 @@ func Replace(params martini.Params, req *http.Request, session sessions.Session)
     }
 
     contentString := string(content)
-    client := MakeClient(SERVER_ADDR)
+    client := MakeClient(ConfigReader.ConnString)
     if client == nil{
         return responseJSON(false, "make client error")
     }
@@ -132,7 +132,7 @@ func Set(params martini.Params, req *http.Request, session sessions.Session) str
     }
 
     contentString := string(content)
-    client := MakeClient(SERVER_ADDR)
+    client := MakeClient(ConfigReader.ConnString)
     if client == nil{
         return responseJSON(false, "make client error")
     }
@@ -147,7 +147,7 @@ func Get(params martini.Params, req *http.Request, session sessions.Session) str
     }
 
     key := params["key"]
-    client := MakeClient(SERVER_ADDR)
+    client := MakeClient(ConfigReader.ConnString)
     if client == nil{
         return responseJSON(false, "make client error")
     }
@@ -165,7 +165,7 @@ func Delete(params martini.Params, req *http.Request, session sessions.Session) 
     key := params["key"]
     //delay := params["delay"]
 
-    client  := MakeClient(SERVER_ADDR)
+    client  := MakeClient(ConfigReader.ConnString)
     if client == nil{
         return responseJSON(false, "make client error")
     }
@@ -180,7 +180,7 @@ func FlushAll(params martini.Params, req *http.Request, session sessions.Session
         return responseJSON(false, "没有权限")
     }
 
-    client  := MakeClient(SERVER_ADDR)
+    client  := MakeClient(ConfigReader.ConnString)
     if client == nil{
         return responseJSON(false, "make client error")
     }
@@ -201,7 +201,7 @@ func Incr(params martini.Params, req *http.Request, session sessions.Session) st
         return responseJSON(false, "num error")
     }
 
-    client := MakeClient(SERVER_ADDR)
+    client := MakeClient(ConfigReader.ConnString)
     if client == nil{
         return responseJSON(false, "make client error")
     }
@@ -227,7 +227,7 @@ func Decr(params martini.Params, req *http.Request, session sessions.Session) st
         return responseJSON(false, "num error")
     }
 
-    client := MakeClient(SERVER_ADDR)
+    client := MakeClient(ConfigReader.ConnString)
     if client == nil{
         return responseJSON(false, "make client error")
     }

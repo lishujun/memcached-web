@@ -15,6 +15,11 @@ func Login(req *http.Request, session sessions.Session) string {
         return responseJSON(false, "用户名密码不能为空")
     }
 
+    if username != ConfigReader.Username || password != ConfigReader.Password{
+        l4g.Debug(ConfigReader.Username + ":" + ConfigReader.Password)
+        return responseJSON(false, "用户名密码不正确")
+    }
+
     session.Set("user", username)
     l4g.Info("user '%s' at '%s' login", username, req.RemoteAddr)
     return responseJSON(true, "")
