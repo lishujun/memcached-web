@@ -64,6 +64,8 @@ func Add(params martini.Params, req *http.Request, session sessions.Session) str
     if client == nil{
         return responseJSON(false, "make client error")
     }
+
+    defer client.Close()
     result := client.Add(key, flag, expire, contentString)
     return responseJSON(result, "")
 }
@@ -100,6 +102,8 @@ func Replace(params martini.Params, req *http.Request, session sessions.Session)
     if client == nil{
         return responseJSON(false, "make client error")
     }
+
+    defer client.Close()
     result := client.Replace(key, flag, expire, contentString)
     return responseJSON(result, "")
 }
@@ -136,6 +140,8 @@ func Set(params martini.Params, req *http.Request, session sessions.Session) str
     if client == nil{
         return responseJSON(false, "make client error")
     }
+
+    defer client.Close()
     result := client.Set(key, flag, expire, contentString)
     return responseJSON(result, "")
 }
@@ -152,6 +158,7 @@ func Get(params martini.Params, req *http.Request, session sessions.Session) str
         return responseJSON(false, "make client error")
     }
 
+    defer client.Close()
     result := client.Get(key)
     return responseJSON(true, result)
 }
@@ -170,6 +177,7 @@ func Delete(params martini.Params, req *http.Request, session sessions.Session) 
         return responseJSON(false, "make client error")
     }
 
+    defer client.Close()
     result := client.Delete(key)
     return responseJSON(result, "")
 }
@@ -184,6 +192,8 @@ func FlushAll(params martini.Params, req *http.Request, session sessions.Session
     if client == nil{
         return responseJSON(false, "make client error")
     }
+
+    defer client.Close()
     result := client.FlushAll()
     return responseJSON(result, "")
 }
@@ -206,6 +216,7 @@ func Incr(params martini.Params, req *http.Request, session sessions.Session) st
         return responseJSON(false, "make client error")
     }
 
+    defer client.Close()
     newNum, result := client.Incr(key, num)
     if ! result {
         return responseJSON(false, "incr error")
@@ -232,6 +243,7 @@ func Decr(params martini.Params, req *http.Request, session sessions.Session) st
         return responseJSON(false, "make client error")
     }
 
+    defer client.Close()
     newNum, result := client.Decr(key, num)
     if ! result {
         return responseJSON(false, "incr error")

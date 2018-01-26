@@ -81,7 +81,7 @@ func (this *MemcachedClient) callSaveApi(command string, data string) string {
     return string(response[:n])
 }
 
-func (this *MemcachedClient)parse(response string) []CachedResult {
+func (this *MemcachedClient) parse(response string) []CachedResult {
 
     var resultList []CachedResult = []CachedResult{}
     slice := response[:]
@@ -106,6 +106,13 @@ func (this *MemcachedClient)parse(response string) []CachedResult {
         break
     }
     return resultList
+}
+
+func (this *MemcachedClient) Close(){
+    if(this.conn != nil){
+        l4g.Debug("close conn")
+        this.conn.Close()
+    }
 }
 
 func (this *MemcachedClient) Add(key string, flag int, expire int, data string) bool {
