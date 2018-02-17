@@ -56,6 +56,7 @@
         <input type="text" id="search-box" />
         <input type="button" value="搜索" id ="btn-search" onclick="SearchKey()"/>
         <input type="button" value="添加" id ="btn-add" onclick="showAddUI()"/>
+        <input type="button" value="清空缓存" id="btn-clear" onclick="clearData()"/>
         <label id="lbl_search_msg" style="color: red"></label>
     </div>
 
@@ -204,6 +205,24 @@
                     return;
                 }
             }
+        }
+
+        function clearData(){
+            $.ajax({
+                type: 'POST',
+                url: baseUrl + "/action/flushall",
+                dataType: 'json',
+                error: function (msg) {
+                    alert("清除缓存失败");
+                    console.log("error: " + JSON.stringify(msg))
+                },
+                success: function (data) {
+                    if(! data.result){
+                        return;
+                    }
+                    alert("成功");
+                }
+            });
         }
 
         function showJson(e) {
