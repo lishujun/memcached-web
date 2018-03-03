@@ -97,6 +97,11 @@
 
         // ------------------------------------
 
+        function errorHandler(msg){
+            $("#lbl_search_msg").text(msg.responseJSON.message);
+            console.log("error: " + JSON.stringify(msg));
+        }
+
         function SearchKey(){
 
             $("#lbl_search_msg").val("");
@@ -113,10 +118,7 @@
                 url: url,
                 //data: data,
                 dataType: 'json',
-                error: function (msg) {
-                    $("#lbl_search_msg").text("发生一个错误!");
-                    console.log("error: " + JSON.stringify(msg))
-                },
+                error: errorHandler,
                 success: function (data) {
                     if(! data.result){
                         $("#lbl_search_msg").text(data.message);
@@ -130,7 +132,6 @@
                         RemoveKey(row.Key)
                         $('#dg').datagrid('insertRow', {index : 0, row: row});
                     }
-
                 }
             });
         }
@@ -166,10 +167,7 @@
                 url: url,
                 data: row.Data,
                 dataType: 'json',
-                error: function (msg) {
-                    $("#lbl_search_msg").text("发生一个错误!");
-                    console.log("error: " + JSON.stringify(msg))
-                },
+                error: errorHandler,
                 success: function (data) {
                     if(! data.result){
                         $("#lbl_add_msg").text("ERROR");
@@ -191,10 +189,7 @@
                         type: 'POST',
                         url: baseUrl + "/action/delete/"+key,
                         dataType: 'json',
-                        error: function (msg) {
-                            alert("删除失败");
-                            console.log("error: " + JSON.stringify(msg))
-                        },
+                        error: errorHandler,
                         success: function (data) {
                             if(! data.result){
                                 return;
