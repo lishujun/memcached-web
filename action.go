@@ -32,141 +32,141 @@ func responseJSON(result bool, message interface{}) string {
 
 }
 
-func Add(params martini.Params, req *http.Request, session sessions.Session) string {
+func Add(params martini.Params, req *http.Request, session sessions.Session) (int,string) {
 
     if ! CheckAuth(session){
-        return responseJSON(false, "没有权限")
+        return http.StatusOK, responseJSON(false, "No Auth")
     }
 
     key := params["key"]
 
     flag , err := strconv.Atoi(params["flag"])
     if err != nil{
-        return responseJSON(false, "param flag error")
+        return http.StatusOK, responseJSON(false, "param flag error")
     }
 
     expire , err := strconv.Atoi(params["expire"])
     if err != nil{
-        return responseJSON(false, "param expire error")
+        return http.StatusOK, responseJSON(false, "param expire error")
     }
 
     content , err := ioutil.ReadAll(req.Body)
     if err != nil{
-        return responseJSON(false, "post content error")
+        return http.StatusOK, responseJSON(false, "post content error")
     }
 
     if len(content) == 0{
-        return responseJSON(false, "post content is empty")
+        return http.StatusOK, responseJSON(false, "post content is empty")
     }
 
     contentString := string(content)
     client := MakeClient(ConfigReader.ConnString)
     if client == nil{
-        return responseJSON(false, "make client error")
+        return http.StatusOK, responseJSON(false, "make client error")
     }
 
     defer client.Close()
     result := client.Add(key, flag, expire, contentString)
-    return responseJSON(result, "")
+    return http.StatusOK, responseJSON(result, "")
 }
 
-func Replace(params martini.Params, req *http.Request, session sessions.Session) string {
+func Replace(params martini.Params, req *http.Request, session sessions.Session) (int,string) {
 
     if ! CheckAuth(session){
-        return responseJSON(false, "没有权限")
+        return http.StatusOK, responseJSON(false, "No Auth")
     }
 
     key := params["key"]
 
     flag , err := strconv.Atoi(params["flag"])
     if err != nil{
-        return responseJSON(false, "param flag error")
+        return http.StatusOK, responseJSON(false, "param flag error")
     }
 
     expire , err := strconv.Atoi(params["expire"])
     if err != nil{
-        return responseJSON(false, "param expire error")
+        return http.StatusOK, responseJSON(false, "param expire error")
     }
 
     content , err := ioutil.ReadAll(req.Body)
     if err != nil{
-        return responseJSON(false, "post content error")
+        return http.StatusOK, responseJSON(false, "post content error")
     }
 
     if len(content) == 0{
-        return responseJSON(false, "post content is empty")
+        return http.StatusOK, responseJSON(false, "post content is empty")
     }
 
     contentString := string(content)
     client := MakeClient(ConfigReader.ConnString)
     if client == nil{
-        return responseJSON(false, "make client error")
+        return http.StatusOK, responseJSON(false, "make client error")
     }
 
     defer client.Close()
     result := client.Replace(key, flag, expire, contentString)
-    return responseJSON(result, "")
+    return http.StatusOK, responseJSON(result, "")
 }
 
-func Set(params martini.Params, req *http.Request, session sessions.Session) string {
+func Set(params martini.Params, req *http.Request, session sessions.Session) (int,string) {
 
     if ! CheckAuth(session){
-        return responseJSON(false, "没有权限")
+        return http.StatusOK, responseJSON(false, "No Auth")
     }
 
     key := params["key"]
 
     flag , err := strconv.Atoi(params["flag"])
     if err != nil{
-        return responseJSON(false, "param flag error")
+        return http.StatusOK, responseJSON(false, "param flag error")
     }
 
     expire , err := strconv.Atoi(params["expire"])
     if err != nil{
-        return responseJSON(false, "param expire error")
+        return http.StatusOK, responseJSON(false, "param expire error")
     }
 
     content , err := ioutil.ReadAll(req.Body)
     if err != nil{
-        return responseJSON(false, "post content error")
+        return http.StatusOK, responseJSON(false, "post content error")
     }
 
     if len(content) == 0{
-        return responseJSON(false, "post content is empty")
+        return http.StatusOK, responseJSON(false, "post content is empty")
     }
 
     contentString := string(content)
     client := MakeClient(ConfigReader.ConnString)
     if client == nil{
-        return responseJSON(false, "make client error")
+        return http.StatusOK, responseJSON(false, "make client error")
     }
 
     defer client.Close()
     result := client.Set(key, flag, expire, contentString)
-    return responseJSON(result, "")
+    return http.StatusOK, responseJSON(result, "")
 }
 
-func Get(params martini.Params, req *http.Request, session sessions.Session) string {
+func Get(params martini.Params, req *http.Request, session sessions.Session) (int,string) {
 
     if ! CheckAuth(session){
-        return responseJSON(false, "没有权限")
+        return http.StatusOK, responseJSON(false, "No Auth")
     }
 
     key := params["key"]
     client := MakeClient(ConfigReader.ConnString)
     if client == nil{
-        return responseJSON(false, "make client error")
+        return http.StatusOK, responseJSON(false, "make client error")
     }
 
     defer client.Close()
     result := client.Get(key)
-    return responseJSON(true, result)
+    return http.StatusOK, responseJSON(true, result)
 }
 
-func Delete(params martini.Params, req *http.Request, session sessions.Session) string {
+func Delete(params martini.Params, req *http.Request, session sessions.Session) (int,string) {
 
     if ! CheckAuth(session){
-        return responseJSON(false, "没有权限")
+        return http.StatusOK, responseJSON(false, "No Auth")
     }
 
     key := params["key"]
@@ -174,80 +174,80 @@ func Delete(params martini.Params, req *http.Request, session sessions.Session) 
 
     client  := MakeClient(ConfigReader.ConnString)
     if client == nil{
-        return responseJSON(false, "make client error")
+        return http.StatusOK, responseJSON(false, "make client error")
     }
 
     defer client.Close()
     result := client.Delete(key)
-    return responseJSON(result, "")
+    return http.StatusOK, responseJSON(result, "")
 }
 
-func FlushAll(params martini.Params, req *http.Request, session sessions.Session) string {
+func FlushAll(params martini.Params, req *http.Request, session sessions.Session) (int,string) {
 
     if ! CheckAuth(session){
-        return responseJSON(false, "没有权限")
+        return http.StatusOK, responseJSON(false, "No Auth")
     }
 
     client  := MakeClient(ConfigReader.ConnString)
     if client == nil{
-        return responseJSON(false, "make client error")
+        return http.StatusOK, responseJSON(false, "make client error")
     }
 
     defer client.Close()
     result := client.FlushAll()
-    return responseJSON(result, "")
+    return http.StatusOK, responseJSON(result, "")
 }
 
-func Incr(params martini.Params, req *http.Request, session sessions.Session) string {
+func Incr(params martini.Params, req *http.Request, session sessions.Session) (int,string) {
 
     if ! CheckAuth(session){
-        return responseJSON(false, "没有权限")
+        return http.StatusOK, responseJSON(false, "No Auth")
     }
 
     key := params["key"]
     num , err := strconv.Atoi(params["num"])
 
     if err != nil {
-        return responseJSON(false, "num error")
+        return http.StatusOK, responseJSON(false, "num error")
     }
 
     client := MakeClient(ConfigReader.ConnString)
     if client == nil{
-        return responseJSON(false, "make client error")
+        return http.StatusOK, responseJSON(false, "make client error")
     }
 
     defer client.Close()
     newNum, result := client.Incr(key, num)
     if ! result {
-        return responseJSON(false, "incr error")
+        return http.StatusOK, responseJSON(false, "incr error")
     }
 
-    return responseJSON(true, newNum)
+    return http.StatusOK, responseJSON(true, newNum)
 }
 
-func Decr(params martini.Params, req *http.Request, session sessions.Session) string {
+func Decr(params martini.Params, req *http.Request, session sessions.Session) (int,string) {
 
     if ! CheckAuth(session){
-        return responseJSON(false, "没有权限")
+        return http.StatusOK, responseJSON(false, "No Auth")
     }
 
     key := params["key"]
     num , err := strconv.Atoi(params["num"])
 
     if err != nil {
-        return responseJSON(false, "num error")
+        return http.StatusOK, responseJSON(false, "num error")
     }
 
     client := MakeClient(ConfigReader.ConnString)
     if client == nil{
-        return responseJSON(false, "make client error")
+        return http.StatusOK, responseJSON(false, "make client error")
     }
 
     defer client.Close()
     newNum, result := client.Decr(key, num)
     if ! result {
-        return responseJSON(false, "incr error")
+        return http.StatusOK, responseJSON(false, "incr error")
     }
 
-    return responseJSON(true, newNum)
+    return http.StatusOK, responseJSON(true, newNum)
 }
