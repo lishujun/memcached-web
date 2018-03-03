@@ -209,7 +209,7 @@
                 dataType: 'json',
                 error: function (msg) {
                     alert("清除缓存失败");
-                    console.log("error: " + JSON.stringify(msg))
+                    errorHandler(msg);
                 },
                 success: function (data) {
                     if(! data.result){
