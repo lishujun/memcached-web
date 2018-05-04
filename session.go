@@ -14,7 +14,7 @@ type SESSION struct{
 
 var Session SESSION
 
-func InitSessionCollection(session *SESSION) {
+func InitSession(session *SESSION) {
     l4g.Info("Init Session Collection")
     *session = SESSION{}
     (*session).sessions = make(map[string]time.Time)

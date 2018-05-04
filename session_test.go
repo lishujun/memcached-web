@@ -5,7 +5,7 @@ import (
 )
 
 func TestExists(t *testing.T){
-    InitSessionCollection(&Session)
+    InitSession(&Session)
     sessionid := Session.StartNewSession()
     exists := Session.IsLogin(sessionid)
     if exists != true{
