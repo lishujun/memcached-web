@@ -34,7 +34,13 @@ func (session *SESSION) IsLogin (sessionId string) bool {
         return false
     }
 
-    return time.Now().Sub(lastDate).Minutes() < 20
+    if time.Now().Sub(lastDate).Minutes() > 20{
+        delete(session.sessions, sessionId)
+        return false
+    }
+
+    session.sessions[sessionId] = time.Now()
+    return true
 }
 
 
