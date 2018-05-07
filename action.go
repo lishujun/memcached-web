@@ -128,7 +128,7 @@ func Get(params martini.Params, req *http.Request, session sessions.Session) (in
     result := client.Get(key)
     if len(result) == 0{
         return http.StatusNotFound,
-            responseJSON(false, "NotFound")
+            responseJSON(false, "查找不到缓存数据")
     }
 
     return http.StatusOK, responseJSON(true, result)
