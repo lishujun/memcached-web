@@ -29,7 +29,7 @@ func Logout(req *http.Request, session sessions.Session) (int, string) {
 
     l4g.Info("user '%s' at '%s' logout", session.Get("user"), req.RemoteAddr)
     session.Delete("user")
-    return http.StatusOK, responseJSON(true, "")
+    return http.StatusOK, ""
 }
 
 func CheckAuth(session sessions.Session) bool {

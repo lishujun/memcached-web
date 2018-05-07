@@ -112,9 +112,9 @@
                 return;
             }
 
-            url = baseUrl + "/action/get/"+keyword;
+            url = baseUrl + "/action/keys/"+keyword;
             $.ajax({
-                type: 'POST',
+                type: 'GET',
                 url: url,
                 //data: data,
                 dataType: 'json',
@@ -161,7 +161,7 @@
                 return;
             }
 
-            var url = baseUrl + "/action/add/"+row.Key+"/"+row.Type+"/"+row.Expire;
+            var url = baseUrl + "/action/keys/"+row.Key+"/"+row.Type+"/"+row.Expire;
             $.ajax({
                 type: 'POST',
                 url: url,
@@ -186,8 +186,8 @@
                 if (rows[i].Key == key){
 
                     $.ajax({
-                        type: 'POST',
-                        url: baseUrl + "/action/delete/"+key,
+                        type: 'DELETE',
+                        url: baseUrl + "/action/keys/"+key,
                         dataType: 'json',
                         error: errorHandler,
                         success: function (data) {
@@ -204,8 +204,8 @@
 
         function clearData(){
             $.ajax({
-                type: 'POST',
-                url: baseUrl + "/action/flushall",
+                type: 'DELETE',
+                url: baseUrl + "/action/keys",
                 dataType: 'json',
                 error: function (msg) {
                     alert("清除缓存失败");
