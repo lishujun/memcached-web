@@ -46,17 +46,12 @@
                 type: 'POST',
                 url: baseUrl + "/user/login",
                 data: {"username":username, "password":password},
-                dataType: 'json',
-                error: function (msg) {
-                    $("#lbl_login_msg").text("发生一个错误!");
+                dataType: 'text',
+                error: function (msg){
+                    $("#lbl_login_msg").text(msg.responseText);
                     console.log("error: " + JSON.stringify(msg))
                 },
                 success: function (data) {
-                    if(! data.result){
-                        $("#lbl_login_msg").text(data.message);
-                        return;
-                    }
-
                     location.href="main.html"
                 }
             });
