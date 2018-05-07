@@ -19,7 +19,7 @@ func main() {
     m.Use(sessions.Sessions("my_session", store))
 
     m.Post("/user/login", Login)
-    m.Delete("/user/logout", Logout)
+    m.Delete("/user/login", Logout)
     m.Post("/action/keys/:key/:flag/:expire", Add)
     m.Put("/action/keys/:key/:flag/:expire", Set)
     m.Get("/action/keys/:key", Get)
